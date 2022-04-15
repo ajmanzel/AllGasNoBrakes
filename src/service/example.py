@@ -1,8 +1,7 @@
-
-
 from sqlalchemy.orm import Session
 
 import models, schemas
+
 
 def get_advertisements(db: Session):
     """
