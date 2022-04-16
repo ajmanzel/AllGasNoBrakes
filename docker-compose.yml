@@ -13,7 +13,7 @@ services:
       DB_PASSWORD: password
       DB: db
     ports:
-      - 8000:8000
+      - "8000:8000"
 
   postgres:
     container_name: db
