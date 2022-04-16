@@ -23,3 +23,8 @@ def get_examples(db: Session = Depends(get_db)):
 @router.get("/")
 async def home(request: Request):
 	return templates.TemplateResponse("general_pages/homepage.html",{"request":request})
+
+@router.get("/userpage")
+def getUsers():
+    #Return list of users and data 
+    return 
