@@ -1,15 +1,15 @@
-<html>
-<head>
-    <title>Users Page</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %} 
+  <title>Users Page</title>
+{% endblock %} 
+{% block content %}
     <h1>
-        Users Page
+        Users Data
     </h1>
     <br/>
     {{loop}}
     <b>{{user}}</b>: {{data}}</br>
     {{endloop}}
-</body>
-</html>
+
+{% endblock %}
