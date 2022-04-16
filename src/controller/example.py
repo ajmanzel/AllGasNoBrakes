@@ -27,5 +27,5 @@ async def home(request: Request):
 @router.get("/userpage")
 def getUsers():
     #Return list of users and data 
-    template = Jinja2Templates.get_template('templates/userpage.html')
+    template = templates.TemplateResponse('templates/userpage.html')
     return template.render()
