@@ -3,10 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 
 import controller.profile
-import models.example
+import models.image
 from database import engine
 
-models.example.Base.metadata.create_all(bind=engine)
+models.image.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
