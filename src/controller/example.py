@@ -25,7 +25,7 @@ async def home(request: Request):
 	return templates.TemplateResponse("general_pages/homepage.html",{"request":request})
 
 @router.get("/userpage")
-def getUsers():
+def getUsers(request: Request):
     #Return list of users and data 
-    template = templates.TemplateResponse('templates/userpage.html')
+    template = templates.TemplateResponse('general_pages/userpage.html',{"request":request})
     return template.render()
