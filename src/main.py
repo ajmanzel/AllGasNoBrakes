@@ -1,12 +1,12 @@
-from doctest import Example
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 
-import controller.example
-import models.example
+import controller.profile
+import models.image
 from database import engine
 
-models.example.Base.metadata.create_all(bind=engine)
+models.image.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -15,7 +15,14 @@ app.add_middleware(
     allow_origins=["*"]
 )
 
-app.include_router(controller.example.router)
+app.include_router(controller.profile.router)
+templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse("general_pages/homepage.html", {"request": request})
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

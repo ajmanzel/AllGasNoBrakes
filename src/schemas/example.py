@@ -10,11 +10,13 @@ from pydantic import BaseModel
     So this will help us avoiding confusion while using both.
 """
 
+
 class ExampleCreate(BaseModel):
     """
     This is the object used before it gets created in the database. Used for writing.
     """
     message: str
+
 
 class Example(ExampleCreate):
     """
