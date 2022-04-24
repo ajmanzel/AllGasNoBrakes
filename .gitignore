@@ -147,3 +147,4 @@ cython_debug/
 # Custom
 data/*
 frontend/node_modules/*
+config.env
