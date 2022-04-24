@@ -10,7 +10,7 @@ def save_profile_picture(db: Session, filename, contents):
     """
     filename = get_server_filename(filename)
     save_file_to_server(filename, contents)
-    image = models.image.Image(filename=filename)
+    image = src.models.image.Image(filename=filename)
 
     db.add(image)
     db.commit()

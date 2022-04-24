@@ -10,7 +10,6 @@ load_dotenv()
 
 TRACKER_API_KEY = os.getenv('TRACKER_API_KEY')
 
-
 from dependencies import get_db
 from models.image import Image
 from service.profile import save_profile_picture
@@ -38,6 +37,7 @@ async def get_profile_picture(filename):
     """API endpoint for returning a profile picture from the server"""
     return FileResponse(IMAGE_DIR + filename)
 
+
 @router.get("/{steam_id}")
 async def get_csgo_data(steam_id):
     """GET request to Tracker.gg for CSGO Data"""
@@ -48,7 +48,7 @@ async def get_csgo_data(steam_id):
     res = requests.get(url=url, data=header)
     json_res = json.loads(res.text)
 
-    #Data Parsing
+    # Data Parsing
     username = json_res["data"]["platformInfo"]["platformUserHandle"]
     avatar_url = json_res["data"]["platformInfo"]["avatarUrl"]
     lifetime_stats = json_res["data"]["segments"][0]["stats"]
@@ -56,4 +56,3 @@ async def get_csgo_data(steam_id):
     data = {"username": username, "avatar_url": avatar_url, "stats": lifetime_stats}
 
     return json.dumps(data)
-
