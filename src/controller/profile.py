@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 import os
@@ -38,11 +38,11 @@ async def get_profile_picture(filename):
     return FileResponse(IMAGE_DIR + filename)
 
 
-@router.get("/{steam_id}")
-async def get_csgo_data(steam_id):
+@router.get("/csgo/")
+async def get_csgo_data(steamID: str = Query(..., description="Steam ID")):
     """GET request to Tracker.gg for CSGO Data"""
 
-    url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steam_id
+    url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamID
     header = {"TRN-Api-Key": TRACKER_API_KEY}
 
     res = requests.get(url=url, data=header)
