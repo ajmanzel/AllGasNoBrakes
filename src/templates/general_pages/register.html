@@ -1,0 +1,25 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+<title>Register</title>
+{% endblock %}
+
+{% block content %}
+<h1>Register</h1>
+
+<form action="/api/auth/register" class="align-items-center pt-2" enctype="multipart/form-data" id="register-form"
+      method="post">
+    <div class="form-group pb-2">
+        <label for="register-form-username">Username: </label>
+        <input class="form-control" id="register-form-username" name="username" placeholder="Enter username"
+               type="text">
+    </div>
+    <div class="form-group pb-2">
+        <label for="register-form-password">Password: </label>
+        <input class="form-control" id="register-form-password" name="password" placeholder="Password" type="password">
+    </div>
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="Register">
+    </div>
+</form>
+{% endblock %}

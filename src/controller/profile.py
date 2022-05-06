@@ -1,19 +1,19 @@
+import json
+import os
+
+import requests
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-import os
-from dotenv import load_dotenv
-import requests
-import json
+
+from dependencies import get_db
+from service.profile import save_profile_picture
+from utils.file import IMAGE_DIR
 
 load_dotenv()
 
 TRACKER_API_KEY = os.getenv('TRACKER_API_KEY')
-
-from dependencies import get_db
-from models.image import Image
-from service.profile import save_profile_picture
-from utils.file import IMAGE_DIR
 
 router = APIRouter(
     prefix="/api/profile",
