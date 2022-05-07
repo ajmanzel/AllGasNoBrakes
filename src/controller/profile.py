@@ -58,5 +58,5 @@ async def get_csgo_data(steam_id):
 
         return json.dumps(data)
     except:
-        #This will return the list of errors that occured.
+        # This will return the list of errors that occured.
         return json.dumps(json_res)

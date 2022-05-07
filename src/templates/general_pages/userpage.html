@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %} 
-  <title>Users Page</title>
-{% endblock %} 
+{% block title %}
+<title>Users Page</title>
+{% endblock %}
 {% block content %}
-    <h1>
-        Users Data
-    </h1>
-    <br/>
-    {{loop}}
-    <b>{{user}}</b>: {{data}}</br>
-    {{endloop}}
+<h1>
+    Users Data
+</h1>
+<br/>
+{{loop}}
+<b>{{user}}</b>: {{data}}</br>
+{{endloop}}
 
 {% endblock %}

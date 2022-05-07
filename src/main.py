@@ -4,10 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
-import controller.auth
-import controller.pages
-import controller.profile
-import models.image
+import controller
+import models
 import service
 from database import engine
 from dependencies import get_db
