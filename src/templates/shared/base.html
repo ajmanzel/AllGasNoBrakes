@@ -12,6 +12,7 @@
 </head>
 <body>
 <main class="container">
+    {% if not user %}
     <ul class="nav justify-content-center" style="font-size: x-large">
         <li class="nav-item">
             <a class="nav-link" href="/">Home</a>
@@ -23,6 +24,16 @@
             <a class="nav-link" href="/login">Login</a>
         </li>
     </ul>
+    {% else %}
+    <ul class="nav justify-content-center" style="font-size: x-large">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/api/auth/logout">Logout</a>
+        </li>
+    </ul>
+    {% endif %}
     {% block content %}
     {% endblock %}
 

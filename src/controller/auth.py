@@ -38,3 +38,11 @@ async def login(username: str = Form(...), password: str = Form(...), db: Sessio
     response = RedirectResponse("/", 302)
     response.set_cookie(key="auth_token", value=auth_token, max_age=3600, httponly=True)
     return response
+
+
+@router.get("/logout")
+async def logout():
+    """ API endpoint for logging out a user """
+    response = RedirectResponse("/", 302)
+    response.delete_cookie(key="auth_token")
+    return response
