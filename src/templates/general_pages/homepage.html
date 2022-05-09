@@ -1,21 +1,29 @@
 {% extends "shared/base.html" %}
 
 
-{% block title %} 
-  <title>CS:GO Stats</title>
-{% endblock %} 
+{% block title %}
+<title>CS:GO Stats</title>
+{% endblock %}
 
-{% block content %} 
-  <div class="container">
-    <h1 class="display-4" id='username'>Loading...</h1>
+{% block content %}
+<div class="row">
+  <div class="col-4" id="sidebar" style="">
     <div id="active_users">
       <h3>Active Users</h3>
     </div>
   </div>
+  <div class="col-8" id="content">
+    {% if user %}
+    <h1 class="display-4" id='username'>{{user.username}}</h1>
+    {% else %}
+    <h1 class="display-4">Log in to see who is active!</h1>
+    {% endif %}
+  </div>
+</div>
 
   <form action="/api/profile/csgo/" id="csgo-data" method="get">
       <label for="steamID">Enter Steam ID: </label>
       <input id="steamID" type="text" name="steamID">
       <input type="submit" value="Find My Stats!">
   </form>
-{% endblock %} 
+{% endblock %}
