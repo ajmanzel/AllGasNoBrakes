@@ -1,0 +1,24 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+<title>Login</title>
+{% endblock %}
+
+{% block content %}
+<h1>Login</h1>
+
+<form action="/api/auth/login" class="align-items-center pt-2" enctype="multipart/form-data" id="login-form"
+      method="post">
+    <div class="form-group pb-2">
+        <label for="login-form-username">Username: </label>
+        <input class="form-control" id="login-form-username" name="username" placeholder="Enter username" type="text">
+    </div>
+    <div class="form-group pb-2">
+        <label for="login-form-password">Password: </label>
+        <input class="form-control" id="login-form-password" name="password" placeholder="Password" type="password">
+    </div>
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="Login">
+    </div>
+</form>
+{% endblock %}
