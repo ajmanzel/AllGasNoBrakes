@@ -6,9 +6,6 @@ socket.onmessage = function (event) {
     const messageType = json_data.messageType
 
     switch (messageType) {
-        case 'username':
-            document.getElementById("username").innerText = message
-            break
         case 'add':
             active_users = document.getElementById("active_users")
 

@@ -1,16 +1,17 @@
-import random
-
 import uvicorn
-from fastapi import FastAPI, WebSocket, Request, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, Request, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 
 import controller.auth
 import controller.pages
 import controller.profile
 import models.image
+import service
 from database import engine
+from dependencies import get_db
 from websocket import WebsocketManager
 
 models.image.Base.metadata.create_all(bind=engine)
@@ -39,20 +40,23 @@ websocket_manager = WebsocketManager()
 
 
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+async def websocket_endpoint(websocket: WebSocket, db: Session = Depends(get_db)):
     await websocket.accept()
-    username = "User" + str(random.randint(0, 10000))
+    auth_token = websocket.cookies.get('auth_token')
+    user = service.User.get_user_by_auth_token(db, auth_token)
+    if not user:
+        return
     await websocket.send_json({'messageType': 'active_users',
                                'message': list(WebsocketManager.username_to_websocket.keys())})
-    await websocket_manager.add_client(username, websocket)
-    await websocket.send_json({'messageType': 'username', 'message': username})
+    await websocket_manager.add_client(user.username, websocket)
+    await websocket.send_json({'messageType': 'username', 'message': user.username})
 
     try:
         while True:
             data = await websocket.receive_text()
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
-        await websocket_manager.remove_client(username, websocket)
+        await websocket_manager.remove_client(user.username, websocket)
 
 
 if __name__ == "__main__":
