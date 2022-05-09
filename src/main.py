@@ -6,6 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+import controller.auth
+import controller.pages
 import controller.profile
 import models.image
 from database import engine
@@ -23,6 +25,8 @@ app.add_middleware(
 )
 
 app.include_router(controller.profile.router)
+app.include_router(controller.auth.router)
+app.include_router(controller.pages.router)
 templates = Jinja2Templates(directory="templates")
 
 
