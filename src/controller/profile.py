@@ -1,17 +1,14 @@
+import requests
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, UploadFile, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-import os
-from dotenv import load_dotenv
-import requests
-import json
 
 load_dotenv()
 
-TRACKER_API_KEY = os.getenv('TRACKER_API_KEY')
+TRACKER_API_KEY = "175caabe-f4fb-4840-a226-a8cb867076af"
 
 from dependencies import get_db
-from models.image import Image
 from service.profile import save_profile_picture
 from utils.file import IMAGE_DIR
 
@@ -45,8 +42,7 @@ async def get_csgo_data(steamID: str = Query(..., description="Steam ID")):
     url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamID
     header = {"TRN-Api-Key": TRACKER_API_KEY}
 
-    res = requests.get(url=url, data=header)
-    json_res = json.loads(res.text)
+    json_res = requests.get(url=url, params=header).json()
 
     # Data Parsing
     username = json_res["data"]["platformInfo"]["platformUserHandle"]
@@ -55,4 +51,4 @@ async def get_csgo_data(steamID: str = Query(..., description="Steam ID")):
 
     data = {"username": username, "avatar_url": avatar_url, "stats": lifetime_stats}
 
-    return json.dumps(data)
+    return data
