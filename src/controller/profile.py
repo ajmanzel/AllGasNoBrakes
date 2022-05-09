@@ -3,10 +3,11 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, UploadFile, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+import os
 
 load_dotenv()
 
-TRACKER_API_KEY = "175caabe-f4fb-4840-a226-a8cb867076af"
+TRACKER_API_KEY = os.getenv('TRACKER_API_KEY')
 
 from dependencies import get_db
 from service.profile import save_profile_picture

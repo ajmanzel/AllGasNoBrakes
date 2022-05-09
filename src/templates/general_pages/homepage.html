@@ -19,11 +19,10 @@
     <h1 class="display-4">Log in to see who is active!</h1>
     {% endif %}
   </div>
-</div>
-
   <form action="/api/profile/csgo/" id="csgo-data" method="get">
       <label for="steamID">Enter Steam ID: </label>
       <input id="steamID" type="text" name="steamID">
       <input type="submit" value="Find My Stats!">
   </form>
+</div>
 {% endblock %}
