@@ -1,7 +1,8 @@
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
+from fastapi import FastAPI, WebSocket, Request, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 import controller
@@ -25,6 +26,13 @@ app.add_middleware(
 app.include_router(controller.profile.router)
 app.include_router(controller.auth.router)
 app.include_router(controller.pages.router)
+templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse("general_pages/homepage.html", {"request": request})
+
 
 websocket_manager = WebsocketManager()
 

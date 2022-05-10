@@ -1,19 +1,17 @@
-import json
-import os
-
 import requests
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-
-from dependencies import get_db
-from service.profile import save_profile_picture
-from utils.file import IMAGE_DIR
+import os
 
 load_dotenv()
 
 TRACKER_API_KEY = os.getenv('TRACKER_API_KEY')
+
+from dependencies import get_db
+from service.profile import save_profile_picture
+from utils.file import IMAGE_DIR
 
 router = APIRouter(
     prefix="/api/profile",
@@ -38,25 +36,20 @@ async def get_profile_picture(filename):
     return FileResponse(IMAGE_DIR + filename)
 
 
-@router.get("/csgo/{steam_id}")
-async def get_csgo_data(steam_id):
+@router.get("/csgo/")
+async def get_csgo_data(steamID: str = Query(..., description="Steam ID")):
     """GET request to Tracker.gg for CSGO Data"""
 
-    url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steam_id
+    url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamID
     header = {"TRN-Api-Key": TRACKER_API_KEY}
 
-    res = requests.get(url, header)
-    json_res = json.loads(res.text)
+    json_res = requests.get(url=url, params=header).json()
 
     # Data Parsing
-    try:
-        username = json_res["data"]["platformInfo"]["platformUserHandle"]
-        avatar_url = json_res["data"]["platformInfo"]["avatarUrl"]
-        lifetime_stats = json_res["data"]["segments"][0]["stats"]
+    username = json_res["data"]["platformInfo"]["platformUserHandle"]
+    avatar_url = json_res["data"]["platformInfo"]["avatarUrl"]
+    lifetime_stats = json_res["data"]["segments"][0]["stats"]
 
-        data = {"username": username, "avatar_url": avatar_url, "stats": lifetime_stats}
+    data = {"username": username, "avatar_url": avatar_url, "stats": lifetime_stats}
 
-        return json.dumps(data)
-    except:
-        # This will return the list of errors that occured.
-        return json.dumps(json_res)
+    return data
