@@ -1,17 +1,19 @@
 import requests
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, UploadFile, Query
+from fastapi import APIRouter, Depends, UploadFile, Query, Request
+from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 import os
+from dependencies import get_db
+from service.profile import save_profile_picture
+from utils.file import IMAGE_DIR
 
 load_dotenv()
 
 TRACKER_API_KEY = os.getenv('TRACKER_API_KEY')
 
-from dependencies import get_db
-from service.profile import save_profile_picture
-from utils.file import IMAGE_DIR
+templates = Jinja2Templates(directory="templates")
 
 router = APIRouter(
     prefix="/api/profile",
@@ -37,7 +39,7 @@ async def get_profile_picture(filename):
 
 
 @router.get("/csgo/")
-async def get_csgo_data(steamID: str = Query(..., description="Steam ID")):
+async def get_csgo_data(request: Request, steamID: str = Query(..., description="Steam ID")):
     """GET request to Tracker.gg for CSGO Data"""
 
     url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamID
@@ -52,4 +54,4 @@ async def get_csgo_data(steamID: str = Query(..., description="Steam ID")):
 
     data = {"username": username, "avatar_url": avatar_url, "stats": lifetime_stats}
 
-    return data
+    return templates.TemplateResponse("general_pages/homepage.html", {"request": request, 'data': data})
