@@ -1,0 +1,184 @@
+{% extends "shared/base.html" %}
+
+{% block title %} 
+  <title>Profile Page</title>
+{% endblock %} 
+{% block content %}
+<!-- Top of Page, introduce user -->
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- [Profile Pic] SteamUserID -->
+            <div class="col-1" id="profilepic">
+                <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/bd/bd903971db2f7032287d055268f5d8766b7068a5_full.jpg" alt="Steam Profile Picture" width="92" height="92">
+                <!-- Add profile pic here -->
+            </div>
+            <div class="col-2" id="steamname">
+                <h2>SteamName</h2>
+                <!-- Add steam userID -->
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
+    <!-- Introduce account overview, display hours and matches -->
+    <div class="row">
+        <!-- "Account Overview" playTimeHrs totalMatches -->
+        <div class="col-2" id="accountoverview">
+            <h4>Account Overview</h4>
+        </div>
+        <div class="col" id="extradetails">
+            <p>
+            201h Play Time
+            <!-- Add play time in hrs -->
+            &emsp;
+            &emsp;
+
+            603 Matches</p>
+            <!-- Add total matches played -->
+        </div>
+    </div>
+
+    <hr/>
+    <br/>
+
+    <!-- Stats Box Template. 4 boxes per row
+        <div class="col-2" id="kd" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Title of Box</h6>
+            <p>
+            displayValue <br>
+            Percentile (top or bottom %)
+            </p>
+        </div>
+    -->
+
+
+    <!-- Row 1 of boxes. K/D - Score - Headshot% - ShotAcc -->
+    <div class="row">
+        <div class="col-2" id="kd" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>K/D</h6>
+            <p>
+            1.00 <br>
+            Top 10%
+            </p>
+        </div>
+        <div class="col-2" id="score" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Score</h6>
+            <p>
+            14,000 <br>
+            Top 14%
+            </p>
+        </div>
+        <div class="col-2" id="headshot%" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Headshot %</h6>
+            <p>
+            38.6% <br>
+            Top 45%
+            </p>
+        </div>
+        <div class="col-2" id="shotacc" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Shots Accuracy</h6>
+            <p>
+            19.9% <br>
+            Bottom 30%
+            </p>
+        </div>
+    </div>
+
+    <!-- Row 2 of boxes. Kills - Deaths - TotalHeadshots - Damage -->
+    <div class="row">
+        <div class="col-2" id="kills" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Kills</h6>
+            <p>
+            100 <br>
+            Top 16%
+            </p>
+        </div>
+        <div class="col-2" id="deaths" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Deaths</h6>
+            <p>
+            14,000 <br>
+            Bottom 18%
+            </p>
+        </div>
+        <div class="col-2" id="totalheadshots" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Headshots</h6>
+            <p>
+            3814 <br>
+            Bottom 45%
+            </p>
+        </div>
+        <div class="col-2" id="damage" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Damage</h6>
+            <p>
+            144,145 <br>
+            Bottom 32%
+            </p>
+        </div>
+    </div>
+
+    <!-- Row 3 of boxes. Win% - TotalMVP - BombsPlanted - BombsDefused -->
+    <div class="row">
+        <div class="col-2" id="win%" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Win %</h6>
+            <p>
+            10 <br>
+            Top 19%
+            </p>
+        </div>
+        <div class="col-2" id="totalmvp" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>MVP</h6>
+            <p>
+            13 <br>
+            Bottom 9%
+            </p>
+        </div>
+        <div class="col-2" id="bombplant" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Bombs Planted</h6>
+            <p>
+            38 <br>
+            Top 65%
+            </p>
+        </div>
+        <div class="col-2" id="bombdefuse" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Bombs Defused</h6>
+            <p>
+            0 <br>
+            ---
+            </p>
+        </div>
+    </div>
+
+    <!-- Row 4 of boxes. Wins - Losses - Money - Hostages -->
+    <div class="row">
+        <div class="col-2" id="wins" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Wins</h6>
+            <p>
+            1 <br>
+            Top 10%
+            </p>
+        </div>
+        <div class="col-2" id="losses" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Losses</h6>
+            <p>
+            1,400 <br>
+            Top 14%
+            </p>
+        </div>
+        <div class="col-2" id="money" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Money Earned</h6>
+            <p>
+            $6,194 <br>
+            Top 45%
+            </p>
+        </div>
+        <div class="col-2" id="hostages" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Hostages Rescued</h6>
+            <p>
+            0 <br>
+            
+            </p>
+        </div>
+    </div>
+
+{% endblock %}
