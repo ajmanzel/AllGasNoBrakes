@@ -1,9 +1,10 @@
+import os
+
+import requests
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Request, Query
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from dotenv import load_dotenv
-import os
-import requests
 
 import service
 from dependencies import get_db
@@ -29,6 +30,7 @@ async def profile(request: Request, steamID: str = Query(..., description="Steam
     header = {"TRN-Api-Key": TRACKER_API_KEY}
 
     json_res = requests.get(url=url, params=header).json()
+    print(json_res)
 
     # Data Parsing
     username = json_res["data"]["platformInfo"]["platformUserHandle"]
