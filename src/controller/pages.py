@@ -23,14 +23,16 @@ async def home(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/profile")
-async def profile(request: Request, steamID: str = Query(..., description="Steam ID")):
+async def profile(request: Request, steamID: str = Query(..., description="Steam ID"), db: Session = Depends(get_db)):
     """GET request to Tracker.gg for CSGO Data"""
 
     url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamID
     header = {"TRN-Api-Key": TRACKER_API_KEY}
 
     json_res = requests.get(url=url, params=header).json()
-    print(json_res)
+
+    auth_token = request.cookies.get('auth_token')
+    user = service.User.get_user_by_auth_token(db, auth_token)
 
     # Data Parsing
     username = json_res["data"]["platformInfo"]["platformUserHandle"]
@@ -56,7 +58,8 @@ async def profile(request: Request, steamID: str = Query(..., description="Steam
 
     data = {"username": username, "avatar_url": avatar_url, "stats": stats}
 
-    return templates.TemplateResponse("general_pages/profilepage.html", {"request": request, "data": data})
+    return templates.TemplateResponse("general_pages/profilepage.html",
+                                      {"request": request, "data": data, 'user': user})
 
 
 @router.get("/register")
