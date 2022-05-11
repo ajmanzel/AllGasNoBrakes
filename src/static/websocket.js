@@ -1,43 +1,116 @@
-var socket = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/ws")
+var socket = new WebSocket(
+    "ws://" + window.location.hostname + ":" + window.location.port + "/ws"
+  );
+var chatModal = $("#chatModal");
+var messageBox = $("#messageBox");
+var modalTitle = $(".modal-title");
+var modalBodyInput = $(".modal-body");
+var recipient = "";
+var modalOpen = false;
+var messages = {} // dict of stacks
+var audio = ""
 
-function sendMessage(event) {
-    console.log('hi');
+$('document').ready(function () {
+    audio = new Audio();
+    audio.src = "https://www.soundjay.com/buttons/beep-08b.mp3"
+});
+
+
+function createUserElement(username) {
+active_users = $("#active_users");
+
+new_user = $(
+  '<li id="' +
+    username +
+    '"><a href="#" data-bs-recipient="' +
+    username +
+    '" data-bs-toggle="modal" data-bs-target="#chatModal">' +
+    username +
+    "</a></li>"
+);
+
+active_users.append(new_user);
 }
 
 socket.onmessage = function (event) {
-    const json_data = JSON.parse(event.data);
-    const message = json_data.message
-    const messageType = json_data.messageType
+const json_data = JSON.parse(event.data);
+const message = json_data.message;
+const messageType = json_data.messageType;
 
-    switch (messageType) {
-        case 'add':
-            active_users = document.getElementById("active_users")
+switch (messageType) {
+  case "add":
+    createUserElement(message);
+    break;
+  case "remove":
+    del_user = $('#' + message)
+    console.log(del_user)
+    del_user.remove();
+    break;
+  case "active_users":
+    for (const user of message) {
+      createUserElement(user);
+    }
+    break;
+  case "receive_message":
+      sender = message.sender
+      msg = message.msg
 
-            new_user = document.createElement("a");
-            new_user.href = '#'
-            new_user.setAttribute('id', message)
-            new_user.innerHTML = message
-            new_user.onclick = sendMessage;
+      if (messages[sender])
+          messages[sender].push(sender + ": " + msg)
+      else
+          messages[sender] = [sender + ": " + msg]
 
-            active_users.appendChild(new_user)
-            break
-        case 'remove':
-            del_user = document.getElementById(message)
-            del_user.remove()
-            break
-        case 'active_users':
-            active_users = document.getElementById("active_users")
+      if (sender === recipient)
+        modalBodyInput.append("<p>" + sender + ": " + msg + "</p>")
+      else {
+        var sender_link = $("a[data-bs-recipient='" + sender + "']")
+        sender_link.css("font-weight","Bold")
+        audio.play();
+    }
+      console.log("Message from " + sender + ": " + msg)
+      break;
+  default:
+    console.log("received an invalid WS messageType: " + messageType);
+}
+};
 
-            for (const user of message) {
-                const new_user = document.createElement("a");
-                new_user.setAttribute('id', user)
-                new_user.innerHTML = user
-                new_user.onclick = console.log("hi");
+$(chatModal).on("hidden.bs.modal", function (event) {
+    recipient = ''
+});
 
-                active_users.appendChild(new_user)
-            }
-            break
-        default:
-            console.log("received an invalid WS messageType: " + messageType);
+$(chatModal).on("show.bs.modal", function (event) {
+var modal_trigger_element = $(event.relatedTarget);
+modal_trigger_element.css("font-weight","normal")
+modalBodyInput.html('')
+
+recipient = modal_trigger_element.attr("data-bs-recipient");
+
+var msgs = messages[recipient]
+if (msgs) {
+    for (const m of msgs) {
+    modalBodyInput.append("<p>" + m + "</p>")
     }
 }
+
+modalTitle.text("Chatting with " + recipient);
+});
+
+$(chatModal).on("keypress", function (event) {
+if (event.key == "Enter") {
+  var msg = messageBox.val();
+  messageBox.val("");
+  messageBox.focus();
+
+  ws_message = {"messageType": "send_message", "message": {"recipient": recipient, "msg": msg}}
+
+  socket.send(JSON.stringify(ws_message))
+  $(".modal-body").append("<p>Me: " + msg + "</p>")
+
+  if (messages[recipient])
+      messages[recipient].push("Me: " + msg)
+  else
+      messages[recipient] = ["Me: " + msg]
+  console.log(messages)
+  // then add the message to the messages cache stack
+}
+});
