@@ -7,51 +7,50 @@
 
 {% block content %}
 <div class="d-flex justify-content-center">
-  {% if user %}
-  <h1 class="display-4" id='username'>Welcome back {{user.username}}!</h1>
-  {% else %}
-  <h1 class="display-4">Log in to see who is active!</h1>
-  {% endif %}
+    {% if user %}
+    <h1 class="display-4" id='username'>Welcome back {{user.username}}!</h1>
+    {% else %}
+    <h1 class="display-4">Log in to see who is active!</h1>
+    {% endif %}
 </div>
 <div class="row">
-  <div class="col-4" id="sidebar" style="">
-    <div>
-      <h3>Active Users</h3>
-      <ul id="active_users"></ul>
+    <div class="col-4" id="sidebar" style="">
+        <div>
+            <h3>Active Users</h3>
+            <ul id="active_users"></ul>
+        </div>
     </div>
-  </div>
-  <div class="col-8" id="content">
+    <div class="col-8" id="content">
 
-  </div>
-  <form action="/api/profile/csgo/" id="csgo-data" method="get">
-    <label for="steamID">Enter Steam ID: </label>
-    <input id="steamID" type="text" name="steamID">
-    <input type="submit" value="Find My Stats!">
-  </form>
+    </div>
+    <form action="/api/profile/csgo/" id="csgo-data" method="get">
+        <label for="steamID">Enter Steam ID: </label>
+        <input id="steamID" name="steamID" type="text">
+        <input type="submit" value="Find My Stats!">
+    </form>
 </div>
 
 <!-- The Modal -->
 <div class="modal" id="chatModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Chatting with...</h4>
-        <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
-      </div>
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Chatting with...</h4>
+                <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
 
-      <!-- Modal body -->
-      <div class="modal-body">
-      </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+            </div>
 
-      <!-- Modal footer -->
-      <div class="modal-footer input-group mb-3">
-        <input autofocus class="form-control" id="messageBox" placeholder="Message" type="text">
-      </div>
-
+            <!-- Modal footer -->
+            <div class="modal-footer input-group mb-3">
+                <input autofocus class="form-control" id="messageBox" placeholder="Message" type="text">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <a data-bs-recipient="" data-bs-target="#chatModal" data-bs-toggle="modal" href="#"></a>

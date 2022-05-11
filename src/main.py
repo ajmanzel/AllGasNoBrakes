@@ -49,10 +49,10 @@ async def websocket_endpoint(websocket: WebSocket, db: Session = Depends(get_db)
         while True:
             data = await websocket.receive_text()
             data_json = json.loads(data)
-            messageType = data_json.get('messageType')
+            message_type = data_json.get('messageType')
             message = data_json.get('message')
 
-            if messageType == 'send_message':
+            if message_type == 'send_message':
                 sender = user.username
                 recipient = message.get('recipient', None)
                 msg = message.get('msg', None)
