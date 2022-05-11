@@ -1,0 +1,172 @@
+{% extends "shared/base.html" %}
+
+{% block title %} 
+  <title>Profile Page</title>
+{% endblock %} 
+{% block content %}
+<!-- Top of Page, introduce user -->
+    <div class="row align-items-center">
+        <!-- [Profile Pic] SteamUserID -->
+        <div id="profilepic">
+            <img src='{{data["avatar_url"]}}' alt="Steam Profile Picture" width="138" height="138">
+        </div>
+        <div id="steamname">
+            <h1>{{data["username"]}}</h1>
+        </div>
+    </div>
+
+    <hr/>
+    <br/>
+
+    <!-- Introduce account overview, display hours and matches -->
+    <div class="row">
+        <!-- "Account Overview" playTimeHrs totalMatches -->
+        <h4>Account Overview</h4>
+        <p>
+        {{data["stats"]["timePlayed"]["value"]}} Play Time
+        &emsp;
+        {{data["stats"]["matchesPlayed"]["value"]}} Matches</p>
+    </div>
+
+    <br/>
+
+    <!-- Stats Box Template. 4 boxes per row
+        <div class="col-2" id="kd" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Title of Box</h6>
+            <p>
+            displayValue <br>
+            Percentile (top or bottom %)
+            </p>
+        </div>
+    -->
+
+
+    <!-- Row 1 of boxes. K/D - Score - Headshot% - ShotAcc -->
+    <div class="row">
+        <div class="col-sm" id="kd" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>K/D</h6>
+            <p>
+            {{data["stats"]["kd"]["value"]}} <br>
+            {{data["stats"]["kd"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="score" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Score</h6>
+            <p>
+            {{data["stats"]["score"]["value"]}} <br>
+            {{data["stats"]["score"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="headshot%" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Headshot %</h6>
+            <p>
+            {{data["stats"]["headshotPct"]["value"]}} <br>
+            {{data["stats"]["headshotPct"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="shotacc" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Shots Accuracy</h6>
+            <p>
+            {{data["stats"]["shotsAccuracy"]["value"]}} <br>
+            {{data["stats"]["shotsAccuracy"]["percentile"]}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Row 2 of boxes. Kills - Deaths - TotalHeadshots - Damage -->
+    <div class="row">
+        <div class="col-sm" id="kills" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Kills</h6>
+            <p>
+            {{data["stats"]["kills"]["value"]}} <br>
+            {{data["stats"]["kills"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="deaths" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Deaths</h6>
+            <p>
+            {{data["stats"]["deaths"]["value"]}}<br>
+            {{data["stats"]["deaths"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="totalheadshots" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Headshots</h6>
+            <p>
+            {{data["stats"]["headshots"]["value"]}}<br>
+            {{data["stats"]["headshots"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="damage" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Damage</h6>
+            <p>
+            {{data["stats"]["damage"]["value"]}}<br>
+            {{data["stats"]["damage"]["percentile"]}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Row 3 of boxes. Win% - TotalMVP - BombsPlanted - BombsDefused -->
+    <div class="row">
+        <div class="col-sm" id="win%" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Win %</h6>
+            <p>
+            {{data["stats"]["wlPercentage"]["value"]}}<br>
+            {{data["stats"]["wlPercentage"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="totalmvp" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>MVP</h6>
+            <p>
+            {{data["stats"]["mvp"]["value"]}}<br>
+            {{data["stats"]["mvp"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="bombplant" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Bombs Planted</h6>
+            <p>
+            {{data["stats"]["bombsPlanted"]["value"]}}<br>
+            {{data["stats"]["bombsPlanted"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="bombdefuse" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Bombs Defused</h6>
+            <p>
+            {{data["stats"]["bombsDefused"]["value"]}}<br>
+            {{data["stats"]["bombsDefused"]["percentile"]}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Row 4 of boxes. Wins - Losses - Money - Hostages -->
+    <div class="row">
+        <div class="col-sm" id="wins" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Wins</h6>
+            <p>
+            {{data["stats"]["wins"]["value"]}}<br>
+            {{data["stats"]["wins"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="losses" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Losses</h6>
+            <p>
+            {{data["stats"]["losses"]["value"]}}<br>
+            {{data["stats"]["losses"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="money" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Money Earned</h6>
+            <p>
+            {{data["stats"]["moneyEarned"]["value"]}}<br>
+            {{data["stats"]["moneyEarned"]["percentile"]}}
+            </p>
+        </div>
+        <div class="col-sm" id="hostages" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
+            <h6>Hostages Rescued</h6>
+            <p>
+            {{data["stats"]["hostagesRescued"]["value"]}}<br>
+            {{data["stats"]["hostagesRescued"]["percentile"]}}
+            </p>
+        </div>
+    </div>
+
+{% endblock %}
