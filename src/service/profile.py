@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-import models, schemas
-from utils.file import IMAGE_DIR, save_file_to_server, get_server_filename
+import models
+from utils.file import save_file_to_server, get_server_filename
 
 
 def save_profile_picture(db: Session, filename, contents):
@@ -10,7 +10,7 @@ def save_profile_picture(db: Session, filename, contents):
     """
     filename = get_server_filename(filename)
     save_file_to_server(filename, contents)
-    image = src.models.image.Image(filename=filename)
+    image = models.Image(filename=filename)
 
     db.add(image)
     db.commit()

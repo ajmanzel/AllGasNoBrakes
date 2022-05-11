@@ -1,7 +1,8 @@
-import random
 import os
+import random
 
 IMAGE_DIR = "images/"
+
 
 def save_file_to_server(filename, data):
     exists = os.path.exists(IMAGE_DIR)
@@ -9,6 +10,7 @@ def save_file_to_server(filename, data):
         os.makedirs(IMAGE_DIR)
     with open(f"{IMAGE_DIR}{filename}", 'wb') as f:
         f.write(data)
+
 
 def get_server_filename(filename):
     file_type = filename[-4:]
