@@ -2,7 +2,7 @@
 
 
 {% block title %}
-    <title>CS:GO Stats</title>
+<title>CS:GO Stats</title>
 {% endblock %}
 
 {% block content %}
@@ -14,20 +14,20 @@
     {% endif %}
 </div>
 <div class="row">
-    <div class="col-4" id="sidebar" style="">
+    <div class="col-4 pt-3" id="sidebar" style="">
         <div>
             <h3>Active Users</h3>
             <ul id="active_users"></ul>
         </div>
     </div>
-    <div class="col-8" id="content">
-
+    <div class="col-8 pt-3" id="content">
+        <form action="/profile/" id="csgo-data" method="get">
+            <label for="steamID">Enter Steam ID: </label>
+            <input id="steamID" name="steamID" type="text">
+            <input type="submit" value="Find My Stats!">
+        </form>
     </div>
-    <form action="/profile/" id="csgo-data" method="get">
-        <label for="steamID">Enter Steam ID: </label>
-        <input id="steamID" name="steamID" type="text">
-        <input type="submit" value="Find My Stats!">
-    </form>
+
 </div>
 
 <!-- The Modal -->
