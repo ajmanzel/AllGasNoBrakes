@@ -31,15 +31,6 @@ app.include_router(controller.pages.router)
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/")
-async def home(request: Request):
-    return templates.TemplateResponse("general_pages/homepage.html", {"request": request})
-
-@app.get("/profile")
-async def home(request: Request):
-    return templates.TemplateResponse("general_pages/profilepage.html", {"request": request})
-
-
 websocket_manager = WebsocketManager()
 
 
