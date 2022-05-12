@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Form
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
+import schemas
 import service
 from dependencies import get_db
 
@@ -19,7 +20,8 @@ async def register(username: str = Form(...), password: str = Form(...), db: Ses
     if user:
         raise HTTPException(status_code=422, detail="Username already in use")
 
-    created_user = service.User.create_user(db, username, password)
+    created_user = schemas.UserCreate(username=username, password=password)
+    service.User.create_user(db, created_user)
 
     return RedirectResponse("/login", 302)
 

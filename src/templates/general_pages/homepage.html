@@ -6,18 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center">
-    {% if user %}
-    <h1 class="display-4" id='username'>Welcome back {{user.username}}!</h1>
-    {% else %}
-    <h1 class="display-4">Log in to see who is active!</h1>
-    {% endif %}
-</div>
-<div class="row">
+<div class="row pt-3">
     <div class="col-4 pt-3" id="sidebar" style="">
         <div>
-            <h3>Active Users</h3>
-            <ul id="active_users"></ul>
+            <h3>Active Users:</h3>
+            <ul class="p-0" id="active_users"></ul>
+            {% if not user %}
+            <p>Log in to see who is active!</p>
+            {% endif %}
         </div>
     </div>
     <div class="col-8 pt-3" id="content">

@@ -1,15 +1,31 @@
-{% extends "base.html" %}
+{% extends "shared/base.html" %}
 
 {% block title %}
 <title>Users Page</title>
 {% endblock %}
 {% block content %}
-<h1>
-    Users Data
-</h1>
-<br/>
-{{loop}}
-<b>{{user}}</b>: {{data}}</br>
-{{endloop}}
+<div class="pt-3">
+    <div class="row justify-content-md-center">
+        <div class="col-auto">
+            <image height="56" src="/api/profile/{{user.username}}" width="64"/>
+        </div>
+        <div class="col-auto">
+            <h1>{{user.username}}</h1>
+        </div>
+    </div>
+    <div class="row justify-content-md-center pt-3">
+        <div class="col-auto">
+            <form action="/api/profile" enctype="multipart/form-data" method="post">
+                <div class="form-group pt-3">
+                    <label for="file">Change Profile Picture</label>
+                    <input accept="image/png, image/jpeg" class="form-control" id="file" name="file" type="file">
+                </div>
+                <div class="form-group pt-3">
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

@@ -20,11 +20,11 @@ function createUserElement(username) {
 active_users = $("#active_users");
 
 new_user = $(
-  '<li id="' +
+  '<li style="list-style-type: none;" id="' +
     username +
-    '"><a href="#" data-bs-recipient="' +
+    '"> <image width="64" height="56" src="/api/profile/' + username + '" /> <a href="#" data-bs-recipient="' +
     username +
-    '" data-bs-toggle="modal" data-bs-target="#chatModal">' +
+    '" data-bs-toggle="modal" data-bs-target="#chatModal" class="h4">' +
     username +
     "</a></li>"
 );

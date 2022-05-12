@@ -5,15 +5,17 @@ import bcrypt
 from sqlalchemy.orm import Session
 
 import models
+import schemas
 
 
 class User:
     @classmethod
-    def create_user(cls, db: Session, username: str, password: str) -> models.User:
+    def create_user(cls, db: Session, user: schemas.UserCreate) -> models.User:
         salt = bcrypt.gensalt()
-        hashed_pw = bcrypt.hashpw(password.encode(), salt)
+        hashed_pw = bcrypt.hashpw(user.password.encode(), salt)
 
-        db_user = models.User(username=username, password_hash=hashed_pw.decode(), salt=salt.decode(), token_hash=None)
+        db_user = models.User(username=user.username, password_hash=hashed_pw.decode(), salt=salt.decode(),
+                              token_hash=None, profile_pic="default.jpg")
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
@@ -62,3 +64,13 @@ class User:
             return user
         else:
             return None
+
+    @classmethod
+    def change_profile_picture(cls, db: Session, user: models.User, profile_pic_location: str):
+        user.profile_pic = profile_pic_location
+
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+        return user

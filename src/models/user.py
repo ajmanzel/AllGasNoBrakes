@@ -11,3 +11,4 @@ class User(Base):
     password_hash = Column(String)
     salt = Column(String)
     token_hash = Column(String)
+    profile_pic = Column(String)

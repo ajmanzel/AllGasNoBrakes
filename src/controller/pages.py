@@ -3,6 +3,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Request, Query
+from fastapi.exceptions import HTTPException
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -15,10 +16,21 @@ router = APIRouter(dependencies=[Depends(get_db)])
 TRACKER_API_KEY = os.getenv('TRACKER_API_KEY')
 
 
+@router.get("/user/me")
+async def user(request: Request, db: Session = Depends(get_db)):
+    auth_token = request.cookies.get('auth_token')
+    user = service.User.get_user_by_auth_token(db, auth_token)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return templates.TemplateResponse("general_pages/userpage.html", {"request": request, 'user': user})
+
+
 @router.get("/")
 async def home(request: Request, db: Session = Depends(get_db)):
     auth_token = request.cookies.get('auth_token')
+    print(auth_token)
     user = service.User.get_user_by_auth_token(db, auth_token)
+    print(user)
     return templates.TemplateResponse("general_pages/homepage.html", {"request": request, 'user': user})
 
 
