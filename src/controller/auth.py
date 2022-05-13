@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 import schemas
 import service
 from dependencies import get_db
+from utils import str_tools
 
 router = APIRouter(
     prefix="/api/auth",
@@ -16,11 +17,12 @@ router = APIRouter(
 async def register(username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     """ API endpoint for registering a user """
     user = service.User.get_user_by_username(db, username)
+    escaped_username = str_tools.escaped_html(username)
 
     if user:
         raise HTTPException(status_code=422, detail="Username already in use")
 
-    created_user = schemas.UserCreate(username=username, password=password)
+    created_user = schemas.UserCreate(username=escaped_username, password=password)
     service.User.create_user(db, created_user)
 
     return RedirectResponse("/login", 302)

@@ -1,4 +1,5 @@
 import json
+
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,6 +12,7 @@ import models
 import service
 from database import engine
 from dependencies import get_db
+from utils import str_tools
 from websocket import WebsocketManager
 
 models.image.Base.metadata.create_all(bind=engine)
@@ -55,13 +57,14 @@ async def websocket_endpoint(websocket: WebSocket, db: Session = Depends(get_db)
                 sender = user.username
                 recipient = message.get('recipient', None)
                 msg = message.get('msg', None)
+                escaped_msg = str_tools.escaped_html(msg)
 
                 recipient_ws = websocket_manager.username_to_websocket.get(recipient, None)
                 if recipient_ws is None:
                     raise ValueError("User is not online")
 
                 await recipient_ws.send_json(
-                    {'messageType': 'receive_message', 'message': {'sender': sender, 'msg': msg}})
+                    {'messageType': 'receive_message', 'message': {'sender': sender, 'msg': escaped_msg}})
             else:
                 raise ValueError("Invalid message type")
 
