@@ -15,8 +15,8 @@
         </div>
     </div>
 
-    <hr/>
-    <br/>
+    <hr>
+    <br>
 
     <!-- Introduce account overview, display hours and matches -->
     <div class="row">
@@ -28,7 +28,7 @@
         {{data["stats"]["matchesPlayed"]["value"]}} Matches</p>
     </div>
 
-    <br/>
+    <br>
 
     <!-- Stats Box Template. 4 boxes per row
         <div class="col-2" id="kd" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
@@ -168,5 +168,39 @@
             </p>
         </div>
     </div>
+
+    <hr>
+    <br>
+
+    <h4>Comments:</h4>
+    {% for comment in comments['comments'] %}
+    <div class="row">
+        <div class="col-1">
+            <form action="/api/profile/comment/upvote" id="comment-upvote" enctype="multipart/form-data" method="post">
+                <input id="commentid" value="{{comment['id']}}" hidden>
+                <input type="submit" value="&#128077;">
+            </form>
+            <form action="/api/profile/comment/downvote" id="comment-downvote" enctype="multipart/form-data" method="post">
+                <input id="commentid" value="{{comment['id']}}" hidden>
+                <input type="submit" value="&#128078;">
+            </form>
+        </div>
+        <div class="col">
+            <p> <img src="{{comment['profile_pic']}}" alt="User Profile Picture" width="46" height="46"> {{comment['user']}}: {{comment['text']}}</p>
+        </div>
+    </div>
+    {% endfor %}
+    
+
+    {% if user %}
+    <form action="/api/profile/comment" id="profile-comment" enctype="multipart/form-data" method="post">
+        <label for="comment">Add a comment: </label>
+        <input type="text" id="comment" name="comment">
+        <input id="userid" name="userid" value="{{auth_token}}" hidden>
+        <input id="steamid" name="steamid" value="{{data['steamID']}}" hidden>
+        <input type="submit" value="Post">
+    </form>
+    {% endif %}
+
 
 {% endblock %}

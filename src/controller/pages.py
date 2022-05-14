@@ -5,7 +5,9 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Request, Query
 from fastapi.exceptions import HTTPException
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+import json
 
 import service
 from dependencies import get_db
@@ -38,14 +40,31 @@ async def home(request: Request, db: Session = Depends(get_db)):
 async def profile(request: Request, steamID: str = Query(..., description="Steam ID"), db: Session = Depends(get_db)):
     """GET request to Tracker.gg for CSGO Data"""
 
+    if not steamID:
+        return HTTPException(404, detail="Not found")
+
     url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamID
     header = {"TRN-Api-Key": TRACKER_API_KEY}
 
     json_res = requests.get(url=url, params=header).json()
 
+    try:
+        userID = json_res["data"]["platformInfo"]["platformUserId"]
+    except:
+        return HTTPException(404, detail="Not Found")
+
+    if userID != steamID:
+        return RedirectResponse(f'/profile?steamID={userID}', 301, headers={'Cache-Control': 'no-cache'})
+
     auth_token = request.cookies.get('auth_token')
     user = service.User.get_user_by_auth_token(db, auth_token)
+    profile_comments = service.Comments.get_comments_by_steamId(db, steamID)
 
+    if profile_comments == None:
+        profile_comments = service.Comments.initialize_profile(db, steamID)
+
+    comments = profile_comments.comments
+    comments = json.loads(comments)
     # Data Parsing
     username = json_res["data"]["platformInfo"]["platformUserHandle"]
     avatar_url = json_res["data"]["platformInfo"]["avatarUrl"]
@@ -68,10 +87,10 @@ async def profile(request: Request, steamID: str = Query(..., description="Steam
         stats[i] = {"label":label, "value": val, "percentile": percentile}
     
 
-    data = {"username": username, "avatar_url": avatar_url, "stats": stats}
+    data = {"steamID": userID, "username": username, "avatar_url": avatar_url, "stats": stats}
 
     return templates.TemplateResponse("general_pages/profilepage.html",
-                                      {"request": request, "data": data, 'user': user})
+                                      {"request": request, "data": data, 'user': user, 'comments':comments, "auth_token": auth_token})
 
 
 @router.get("/register")
