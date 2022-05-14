@@ -1,13 +1,16 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 from database import Base
 
 
-class Comments(Base):
+class Comment(Base):
     __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True, index=True)
     steamId = Column(String)
-    #                                   comment id number     username          their comment 
-    #JSON String in the form of {"comments":[{"id":0, "user":"User504", "text": "blahblahblah", "upvotes": 0, "downvotes": 0}]}
-    comments = Column(String)
+    comment = Column(String)
+    commenter_id = Column(Integer, ForeignKey("users.id"))
+
+    commenter = relationship("User", back_populates="comments")
+    votes = relationship("Vote", back_populates="comment")

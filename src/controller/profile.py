@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends, UploadFile, Request, Form, Request
+from fastapi import APIRouter, Depends, UploadFile, Form, Request
 from fastapi.exceptions import HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from utils import str_tools
+
 import service
 from dependencies import get_db
-import hashlib
+from utils import str_tools
 from utils.file import IMAGE_DIR
 
 templates = Jinja2Templates(directory="templates")
@@ -40,19 +40,16 @@ async def get_profile_picture(username, db: Session = Depends(get_db)):
 
 
 @router.post("/comment")
-async def post_comment(comment: str = Form(...), userid: str = Form(...), steamid: str = Form(...), db: Session = Depends(get_db)):
+async def post_comment(request: Request, comment: str = Form(...), steamid: str = Form(...),
+                       db: Session = Depends(get_db)):
+    auth_token = request.cookies.get('auth_token')
     escaped_comment = str_tools.escaped_html(comment)
 
-    user = service.User.get_user_by_auth_token(db, userid)
+    user = service.User.get_user_by_auth_token(db, auth_token)
 
-    profile_page = service.Comments.get_comments_by_steamId(db, steamid)
-
-    if profile_page == None:
-        raise HTTPException(status_code=403, detail="steamID Incorrect")
-
-    if user == None:
+    if user is None:
         raise HTTPException(status_code=403, detail="UserID Incorrect")
 
-    service.Comments.add_comment(db, profile_page, escaped_comment, user)
+    service.Comments.create_comment(db, steamid, escaped_comment, user)
 
     return RedirectResponse(f'/profile/?steamID={steamid}', 302, headers={'Cache-Control': 'no-cache'})

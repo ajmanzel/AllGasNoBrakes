@@ -1,14 +1,18 @@
 {% extends "shared/base.html" %}
 
-{% block title %} 
-  <title>Profile Page</title>
-{% endblock %} 
+{% macro increment(dct, key, inc=1)%}
+{% if dct.update({key: dct[key] + inc}) %} {% endif %}
+{% endmacro %}
+
+{% block title %}
+<title>Profile Page</title>
+{% endblock %}
 {% block content %}
 <!-- Top of Page, introduce user -->
-    <div class="row align-items-center">
-        <!-- [Profile Pic] SteamUserID -->
-        <div id="profilepic">
-            <img src='{{data["avatar_url"]}}' alt="Steam Profile Picture" width="138" height="138">
+<div class="row align-items-center">
+    <!-- [Profile Pic] SteamUserID -->
+    <div id="profilepic">
+        <img src='{{data["avatar_url"]}}' alt="Steam Profile Picture" width="138" height="138">
         </div>
         <div id="steamname">
             <h1>{{data["username"]}}</h1>
@@ -163,40 +167,52 @@
         <div class="col-sm" id="hostages" style="border:rgb(92, 89, 89); border-width:1px; border-style:solid;">
             <h6>Hostages Rescued</h6>
             <p>
-            {{data["stats"]["hostagesRescued"]["value"]}}<br>
-            {{data["stats"]["hostagesRescued"]["percentile"]}}
+                {{data["stats"]["hostagesRescued"]["value"]}}<br>
+                {{data["stats"]["hostagesRescued"]["percentile"]}}
             </p>
         </div>
     </div>
 
-    <hr>
-    <br>
+<hr>
+<br>
 
-    <h4>Comments:</h4>
-    {% for comment in comments['comments'] %}
-    <div class="row">
-        <div class="col-1">
-            <form action="/api/profile/comment/upvote" id="comment-upvote" enctype="multipart/form-data" method="post">
-                <input id="commentid" value="{{comment['id']}}" hidden>
-                <input type="submit" value="&#128077;">
-            </form>
-            <form action="/api/profile/comment/downvote" id="comment-downvote" enctype="multipart/form-data" method="post">
-                <input id="commentid" value="{{comment['id']}}" hidden>
-                <input type="submit" value="&#128078;">
-            </form>
-        </div>
-        <div class="col">
-            <p> <img src="{{comment['profile_pic']}}" alt="User Profile Picture" width="46" height="46"> {{comment['user']}}: {{comment['text']}}</p>
-        </div>
+{% if user %}
+<h4>Comments:</h4>
+{% for comment in comments %}
+<div class="row">
+    <div class="col-1" id="{{ comment['id'] }}">
+        {% set counter = {
+        'upvotes': 0,
+        'downvotes': 0
+        } %}
+        {% for vote in comment['votes'] %}
+        {% if vote['vote'] == "upvote" %}
+        {{ increment(counter, 'upvotes') }}
+        {% else %}
+        {{ increment(counter, 'downvotes') }}
+        {% endif %}
+        {% endfor %}
+        <label for="upvote" id="upvote-label-{{comment['id']}}">{{counter.upvotes}}</label>
+        <button class="btn btn-primary mb-3" id="upvote" name="upvote" onclick="sendVote({{ comment['id'] }}, 'upvote')"
+                type="button">Upvote
+        </button>
+        <label for="downvote" id="downvote-label-{{comment['id']}}">{{counter.downvotes}}</label>
+        <button class="btn btn-primary mb-3" id="downvote" name="downvote"
+                onclick="sendVote({{ comment['id'] }}, 'downvote')" type="button">Downvote
+        </button>
+
     </div>
+    <div class="col">
+        <p><img alt="User Profile Picture" height="46" src="/api/profile/{{comment['commenter']['username']}}"
+                width="46"> {{comment['commenter']['username']}}: {{comment['comment']}}</p>
+    </div>
+</div>
     {% endfor %}
-    
 
-    {% if user %}
-    <form action="/api/profile/comment" id="profile-comment" enctype="multipart/form-data" method="post">
+
+<form action="/api/profile/comment" id="profile-comment" enctype="multipart/form-data" method="post">
         <label for="comment">Add a comment: </label>
         <input type="text" id="comment" name="comment">
-        <input id="userid" name="userid" value="{{auth_token}}" hidden>
         <input id="steamid" name="steamid" value="{{data['steamID']}}" hidden>
         <input type="submit" value="Post">
     </form>

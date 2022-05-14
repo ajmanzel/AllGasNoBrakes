@@ -65,6 +65,18 @@ async def websocket_endpoint(websocket: WebSocket, db: Session = Depends(get_db)
 
                 await recipient_ws.send_json(
                     {'messageType': 'receive_message', 'message': {'sender': sender, 'msg': escaped_msg}})
+            elif message_type == 'vote':
+                vote_escaped = str_tools.escaped_html(message.get('vote'))
+                comment_id = message.get('comment_id')
+                vote = models.Vote(vote=vote_escaped, comment_id=comment_id, voted_user_id=user.id)
+
+                db.add(vote)
+                db.commit()
+                db.refresh(vote)
+
+                send_msg = {'messageType': 'vote', 'message': {'comment_id': vote.comment_id, 'vote': vote.vote}}
+
+                await websocket_manager.broadcast_json(data=send_msg)
             else:
                 raise ValueError("Invalid message type")
 

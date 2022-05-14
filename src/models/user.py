@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from database import Base
 
@@ -12,3 +13,6 @@ class User(Base):
     salt = Column(String)
     token_hash = Column(String)
     profile_pic = Column(String)
+
+    comments = relationship("Comment", back_populates="commenter")
+    voter = relationship("Vote", back_populates="voter")

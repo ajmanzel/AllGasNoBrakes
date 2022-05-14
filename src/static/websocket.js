@@ -52,8 +52,8 @@ switch (messageType) {
     }
     break;
   case "receive_message":
-      sender = message.sender
-      msg = message.msg
+      var sender = message.sender
+      var msg = message.msg
 
       if (messages[sender])
           messages[sender].push(sender + ": " + msg)
@@ -69,6 +69,23 @@ switch (messageType) {
     }
       console.log("Message from " + sender + ": " + msg)
       break;
+  case "vote":
+    var comment_id = message.comment_id
+    var vote = message.vote
+    console.log(comment_id)
+    console.log(vote)
+
+    if (vote === 'upvote') {
+        var label = $('#upvote-label-' + comment_id)
+        var count = parseInt(label.text())
+        label.text(count + 1)
+    }
+    else {
+        var label = $('#downvote-label-' + comment_id)
+        var count = parseInt(label.text())
+        label.text(count + 1)
+    }
+    break;
   default:
     console.log("received an invalid WS messageType: " + messageType);
 }
@@ -114,3 +131,8 @@ if (event.key == "Enter") {
   // then add the message to the messages cache stack
 }
 });
+
+function sendVote(comment_id, vote) {
+    ws_message = {"messageType": "vote", "message": {"comment_id": comment_id, "vote": vote}}
+    socket.send(JSON.stringify(ws_message))
+}
