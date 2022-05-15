@@ -29,14 +29,14 @@ async def create_profile_picture(request: Request, file: UploadFile, db: Session
     image = service.profile.save_profile_picture(db, file.filename, contents)
     updated_user = service.User.change_profile_picture(db, user, image.filename)
 
-    return RedirectResponse('/user/me', 302, headers={'Cache-Control': 'no-cache'})
+    return RedirectResponse('/user/me', 302, headers={'Cache-Control': 'no-store'})
 
 
 @router.get("/{username}")
 async def get_profile_picture(username, db: Session = Depends(get_db)):
     """API endpoint for returning a profile picture from the server"""
     user = service.User.get_user_by_username(db, username)
-    return FileResponse(IMAGE_DIR + user.profile_pic)
+    return FileResponse(IMAGE_DIR + user.profile_pic, headers={'Cache-Control': 'no-store'})
 
 
 @router.post("/comment")
