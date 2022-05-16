@@ -58,7 +58,10 @@ class User:
     @classmethod
     def is_correct_user(cls, db: Session, username: str, password: str):
         user = cls.get_user_by_username(db, username)
-        test_password = bcrypt.hashpw(password.encode(), user.salt.encode())
+        if user:
+            test_password = bcrypt.hashpw(password.encode(), user.salt.encode())
+        else:
+            return None
 
         if test_password == user.password_hash.encode():
             return user
