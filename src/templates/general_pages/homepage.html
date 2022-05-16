@@ -17,10 +17,10 @@
         </div>
     </div>
     <div class="col-8 pt-3" id="content">
-        <form action="/profile/" id="csgo-data" method="get">
+        <form action="javascript:void(0);" id="csgo-data">
             <label for="steamID">Enter Steam ID: </label>
-            <input id="steamID" name="steamID" type="text">
-            <input type="submit" value="Find My Stats!">
+            <input id="steamID" name="steamID" type="text"/>
+            <button onsubmit="findStats()" type="submit">Find My Stats!</button>
         </form>
     </div>
 

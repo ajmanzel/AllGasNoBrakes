@@ -52,4 +52,4 @@ async def post_comment(request: Request, comment: str = Form(...), steamid: str 
 
     service.Comments.create_comment(db, steamid, escaped_comment, user)
 
-    return RedirectResponse(f'/profile/?steamID={steamid}', 302, headers={'Cache-Control': 'no-cache'})
+    return RedirectResponse(f'/profile/{steamid}', 302, headers={'Cache-Control': 'no-cache'})

@@ -15,6 +15,16 @@ $('document').ready(function () {
     audio.src = "https://www.soundjay.com/buttons/beep-08b.mp3"
 });
 
+function findStats(e) {
+    e.preventDefault();
+    var steamID = $('#steamID').val()
+
+    this.action = '/profile/' + steamID
+    this.submit()
+}
+
+$('#csgo-data').submit(findStats)
+
 
 function createUserElement(username) {
 active_users = $("#active_users");

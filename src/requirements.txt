@@ -24,3 +24,7 @@ watchgod~=0.8.2
 python-dotenv~=0.20.0
 requests~=2.27.1
 bcrypt~=3.2.2
+certifi~=2021.10.8
+idna~=3.3
+urllib3~=1.26.9
+pycparser~=2.21

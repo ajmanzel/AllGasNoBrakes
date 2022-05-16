@@ -2,7 +2,7 @@ import os
 
 import requests
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, Request, Query
+from fastapi import APIRouter, Depends, Request
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -35,29 +35,34 @@ async def home(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("general_pages/homepage.html", {"request": request, 'user': user})
 
 
-@router.get("/profile")
-async def profile(request: Request, steamID: str = Query(..., description="Steam ID"), db: Session = Depends(get_db)):
+@router.get("/profile/{steamid}")
+async def profile(request: Request, steamid: str, db: Session = Depends(get_db)):
     """GET request to Tracker.gg for CSGO Data"""
 
-    if not steamID:
-        return HTTPException(404, detail="Not found")
+    print("steamID is", steamid)
 
-    url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamID
+    if not steamid:
+        return HTTPException(404, detail="SteamID not supplied.")
+
+    url = "https://public-api.tracker.gg/v2/csgo/standard/profile/steam/" + steamid
     header = {"TRN-Api-Key": TRACKER_API_KEY}
 
-    json_res = requests.get(url=url, params=header).json()
+    res = requests.get(url=url, params=header)
+    res.raise_for_status()
+    json_res = res.json()
 
     try:
         userID = json_res["data"]["platformInfo"]["platformUserId"]
     except:
-        return HTTPException(404, detail="Not Found")
+        print(json_res["data"]["platformInfo"])
+        return HTTPException(404, detail="No userID in the json_res")
 
-    if userID != steamID:
-        return RedirectResponse(f'/profile?steamID={userID}', 301, headers={'Cache-Control': 'no-cache'})
+    if userID != steamid:
+        return RedirectResponse(f'/profile/{userID}', 301, headers={'Cache-Control': 'no-cache'})
 
     auth_token = request.cookies.get('auth_token')
     user = service.User.get_user_by_auth_token(db, auth_token)
-    profile_comments = service.Comments.get_comments_by_steamId(db, steamID)
+    profile_comments = service.Comments.get_comments_by_steamId(db, steamid)
 
     # Data Parsing
     username = json_res["data"]["platformInfo"]["platformUserHandle"]

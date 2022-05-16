@@ -12,6 +12,7 @@ services:
       DB_USER: user
       DB_PASSWORD: password
       DB: db
+      TRACKER_API_KEY: "175caabe-f4fb-4840-a226-a8cb867076af"
     ports:
       - "8000:8000"
 
